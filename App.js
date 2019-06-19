@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
-  ToastAndroid,
   Text,
   Button,
   Alert
@@ -142,7 +141,7 @@ export default class App extends Component {
               name="circle-outline"
               style={{ fontSize: 30, color: "green" }}
             />
-            / &apos;s turn
+            &apos;s turn
           </Text>
         );
     }
