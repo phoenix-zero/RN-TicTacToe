@@ -1,13 +1,8 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Text,
-  Button,
-  Alert
-} from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+  StyleSheet, View, TouchableOpacity, Text, Button, Alert
+} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default class App extends Component {
   constructor(props) {
@@ -25,8 +20,8 @@ export default class App extends Component {
     this.setState({ currentPlayer: 1 });
   };
 
-  renderIcon = (row, col) => {
-    const val = this.state.gameState[row][col];
+  renderIcon = (x, y) => {
+    const val = this.state.gameState[x][y];
     switch (val) {
       case 1:
         return <Icon name="close" style={styles.tileX} />;
@@ -36,6 +31,22 @@ export default class App extends Component {
         return <View />;
     }
   };
+
+  renderView = (x, y) => (
+    <TouchableOpacity
+      style={[
+        styles.box,
+        y === 0 ? { borderLeftWidth: 0 } : {},
+        y === 2 ? { borderRightWidth: 0 } : {},
+        x === 0 ? { borderTopWidth: 0 } : {},
+        x === 2 ? { borderBottomWidth: 0 } : {}
+      ]}
+      key={y}
+      onPress={() => this.onTilePress(x, y)}
+    >
+      {this.renderIcon(x, y)}
+    </TouchableOpacity>
+  );
 
   gameLogic = () => {
     const { gameState } = this.state;
@@ -88,8 +99,7 @@ export default class App extends Component {
         return -1;
       default:
     }
-    for (let i = 0; i < 3; i += 1)
-      for (let j = 0; j < 3; j += 1) if (gameState[i][j] === 0) zeroes += 1;
+    for (let i = 0; i < 3; i += 1) for (let j = 0; j < 3; j += 1) if (gameState[i][j] === 0) zeroes += 1;
     if (zeroes === 0) return -2;
 
     return 2;
@@ -104,17 +114,17 @@ export default class App extends Component {
     this.setState({ currentPlayer });
     switch (this.gameLogic()) {
       case 1:
-        Alert.alert("Player X won the game");
+        Alert.alert('Player X won the game');
         this.componentDidMount();
         this.setState({ currentPlayer: -1 });
         break;
       case -1:
-        Alert.alert("Player O won the game");
+        Alert.alert('Player O won the game');
         this.componentDidMount();
         this.setState({ currentPlayer: 1 });
         break;
       case -2:
-        Alert.alert("No player won the game");
+        Alert.alert('No player won the game');
         this.componentDidMount();
         this.setState({
           currentPlayer: Math.round(Math.random) === 0 ? -1 : 1
@@ -128,22 +138,24 @@ export default class App extends Component {
     switch (this.state.currentPlayer) {
       case 1:
         return (
-          <Text style={{ fontSize: 30, color: "red" }}>
-            Player <Icon name="close" style={{ fontSize: 30, color: "red" }} />
+          <Text style={{ fontSize: 30, color: 'red' }}>
+            Player
+            {' '}
+            <Icon name="close" style={{ fontSize: 30, color: 'red' }} />
             &apos;s turn
           </Text>
         );
       case -1:
         return (
-          <Text style={{ fontSize: 30, color: "green" }}>
-            Player{" "}
-            <Icon
-              name="circle-outline"
-              style={{ fontSize: 30, color: "green" }}
-            />
+          <Text style={{ fontSize: 30, color: 'green' }}>
+            Player
+            {' '}
+            <Icon name="circle-outline" style={{ fontSize: 30, color: 'green' }} />
             &apos;s turn
           </Text>
         );
+      default:
+        return null;
     }
   };
 
@@ -152,90 +164,11 @@ export default class App extends Component {
       <View style={styles.container}>
         {this.playerText()}
         <View style={styles.container}>
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-              onPress={() => this.onTilePress(0, 0)}
-              style={[
-                styles.box,
-                {
-                  borderTopWidth: 0,
-                  borderLeftWidth: 0
-                }
-              ]}
-            >
-              {this.renderIcon(0, 0)}
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.onTilePress(0, 1)}
-              style={[styles.box, { borderTopWidth: 0 }]}
-            >
-              {this.renderIcon(0, 1)}
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.onTilePress(0, 2)}
-              style={[
-                styles.box,
-                {
-                  borderTopWidth: 0,
-                  borderRightWidth: 0
-                }
-              ]}
-            >
-              {this.renderIcon(0, 2)}
-            </TouchableOpacity>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-              onPress={() => this.onTilePress(1, 0)}
-              style={[styles.box, { borderLeftWidth: 0 }]}
-            >
-              {this.renderIcon(1, 0)}
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.onTilePress(1, 1)}
-              style={[styles.box, {}]}
-            >
-              {this.renderIcon(1, 1)}
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.onTilePress(1, 2)}
-              style={[styles.box, { borderRightWidth: 0 }]}
-            >
-              {this.renderIcon(1, 2)}
-            </TouchableOpacity>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-              onPress={() => this.onTilePress(2, 0)}
-              style={[
-                styles.box,
-                {
-                  borderLeftWidth: 0,
-                  borderBottomWidth: 0
-                }
-              ]}
-            >
-              {this.renderIcon(2, 0)}
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.onTilePress(2, 1)}
-              style={[styles.box, { borderBottomWidth: 0 }]}
-            >
-              {this.renderIcon(2, 1)}
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.onTilePress(2, 2)}
-              style={[
-                styles.box,
-                {
-                  borderRightWidth: 0,
-                  borderBottomWidth: 0
-                }
-              ]}
-            >
-              {this.renderIcon(2, 2)}
-            </TouchableOpacity>
-          </View>
+          {this.state.gameState.map((array, xindex) => (
+            <View key={xindex} style={{ flexDirection: 'row' }}>
+              {array.map((val, yindex) => this.renderView(xindex, yindex))}
+            </View>
+          ))}
         </View>
         <Button title="Reset" onPress={this.componentDidMount} />
       </View>
@@ -246,24 +179,24 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F5FCFF"
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF'
   },
   box: {
     borderWidth: 5,
     width: 100,
     height: 100,
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   tileX: {
-    color: "red",
+    color: 'red',
     fontSize: 60
   },
   tileO: {
-    color: "green",
+    color: 'green',
     fontSize: 60
   }
 });
